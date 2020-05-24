@@ -1,3 +1,4 @@
+require('dotenv').config();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -14,6 +15,13 @@ const postsRouter = require('./routes/posts');
 const reviewsRouter = require('./routes/reviews');
 
 const app = express();
+//connect to database
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('We are connected!');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
