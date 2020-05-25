@@ -2,32 +2,43 @@ const Posts = require('../models/post');
 
 module.exports = {
     //Posts Index
-    async getPosts(req,res,next){
+    async postIndex(req,res,next){
         let posts = await Posts.find({});
         res.render('posts/index', { posts });
     },
 
     //Posts New
-    newPost(req,res,next){
+    postNew(req,res,next){
         res.render('posts/new');
     },
 
     //Posts Create
-    async createPost(req,res,next){
-        let post = await Posts.create(req.body);
+    async postCreate(req,res,next){
+        let post = await Posts.create(req.body.post);
         res.redirect(`/posts/${post.id}`);
     },
     
     //Posts Show
-    async showPost(req,res,next){
+    async postShow(req,res,next){
         let post = await Posts.findById(req.params.id);
         res.render('posts/show', { post });
     },
 
     //Posts Edit
-    async editPost(req,res,next){
-        let post = await Posts.findByIdAndUpdate(req.params.id);
+    async postEdit(req,res,next){
+        let post = await Posts.findById(req.params.id);
         res.render('posts/edit', { post });
-    }
+    },
     
+    //Posts Update
+    async postUpdate(req, res, next) {
+        let post = await Posts.findByIdAndUpdate(req.params.id, req.body.post, { new: true });
+        res.redirect(`/posts/${post.id}`);
+    },
+
+    //Posts Destroy
+    async postDestroy(req, res, next){
+        await Posts.findByIdAndRemove(req.params.id);
+        res.redirect('/posts');
+    }
 }
