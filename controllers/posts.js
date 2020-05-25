@@ -14,9 +14,14 @@ module.exports = {
 
     //Posts Create
     async createPost(req,res,next){
-        //use req.body to create a new post
         let post = await Posts.create(req.body);
         res.redirect(`/posts/${post.id}`);
+    },
+    
+    //Posts Show
+    async showPost(req,res,next){
+        let post = await Posts.findById(req.params.id);
+        res.render('posts/show', { post });
     }
     
 }
