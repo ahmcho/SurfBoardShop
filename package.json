@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.10.0",
     "cloudinary": "^1.21.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
