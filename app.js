@@ -1,5 +1,5 @@
 require('dotenv').config();
-const createError = require('http-errors');
+
 const express = require('express');
 const engine = require('ejs-mate');
 const path = require('path');
@@ -27,7 +27,6 @@ db.once('open', function() {
 
 // use ejs-locals for all ejs templates:
 app.engine('ejs', engine);
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -75,7 +74,9 @@ app.use('/posts/:id/reviews', reviewsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 // error handler

@@ -1,4 +1,4 @@
-const Posts = require('../models/post');
+const Post = require('../models/post');
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN});
 const cloudinary = require('cloudinary');
@@ -9,9 +9,9 @@ cloudinary.config({
 });
 
 module.exports = {
-    //Posts Index
+    // Index
     async postIndex(req,res,next){
-        let posts = await Posts.find({});
+        let posts = await Post.find({});
         res.render('posts/index', { posts, title: 'Posts Index' });
     },
 
@@ -36,27 +36,30 @@ module.exports = {
         })
         .send();
         req.body.post.coordinates = response.body.features[0].geometry.coordinates;
-        let post = await Posts.create(req.body.post);
+        let post = await Post.create(req.body.post);
         req.session.success = 'Post created sucessfully!';
         res.redirect(`/posts/${post.id}`);
     },
     
     //Posts Show
     async postShow(req,res,next){
-        let post = await Posts.findById(req.params.id);
-        res.render('posts/show', { post });
+        let post = await Post.findById(req.params.id).populate({
+			path: 'reviews',
+			options: { sort: { '_id': -1 } }
+		});
+		res.render('posts/show', { post });
     },
 
     //Posts Edit
     async postEdit(req,res,next){
-        let post = await Posts.findById(req.params.id);
+        let post = await Post.findById(req.params.id);
         res.render('posts/edit', { post });
     },
     
     //Posts Update
     async postUpdate(req, res, next) {
         //find the post by id
-        let post = await Posts.findById(req.params.id);
+        let post = await Post.findById(req.params.id);
         //check if there's any images for deletion
         if(req.body.deleteImages && req.body.deleteImages.length){
             //assign deleteImages from req.body to its own variable
@@ -110,7 +113,7 @@ module.exports = {
 
     //Posts Destroy
     async postDestroy(req, res, next){
-        let post = await Posts.findById(req.params.id);
+        let post = await Post.findById(req.params.id);
         for(const image of post.images){
             await cloudinary.v2.uploader.destroy(image.public_id);
         }
