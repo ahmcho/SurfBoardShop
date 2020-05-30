@@ -37,6 +37,7 @@ module.exports = {
         .send();
         req.body.post.coordinates = response.body.features[0].geometry.coordinates;
         let post = await Posts.create(req.body.post);
+        req.session.success = 'Post created sucessfully!';
         res.redirect(`/posts/${post.id}`);
     },
     
@@ -100,7 +101,6 @@ module.exports = {
         post.description = req.body.post.description;
         post.price = req.body.post.price;
         
-
         //save the updated post into the db
         post.save();
 

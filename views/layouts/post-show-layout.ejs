@@ -11,6 +11,7 @@
 </head>
 <body>
     <% include ../partials/navbar %>
+    <% include ../partials/flash-messages %>
     <%- body -%>
     <script>
         const post = <%- JSON.stringify(post) %>;
