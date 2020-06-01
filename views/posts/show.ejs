@@ -32,7 +32,24 @@
 <% console.log(post.reviews) %>
 <% post.reviews.forEach(function(review) { %>
     <div>
-        <%= review.body %>
+        <h4>Author: <%= review.author.username %></h4>
+        <%= review.body %><br>
         Rating: <%= review.rating %>
     </div>
+    <% if(review.author.equals(currentUser._id)) { %>
+        <div>
+            <button class="toggle-edit-form">Edit</button>
+
+            <form class="edit-review-form" action="/posts/<%= post.id %>/reviews/<%= review.id %>?_method=PUT" method="POST">
+                <textarea name="review[body]"  required><%= review.body %></textarea>
+                <input type="number" name="review[rating]" min="1" max="5" step="1" required value="<%= review.rating %>">
+                
+                <input type="submit" value="Update">
+            </form>
+            <form  action="/posts/<%= post.id %>/reviews/<%= review.id %>?_method=DELETE" method="POST">
+                <input type="submit" value="Delete">
+            </form>
+        </div>
+    <% } %>
+    <hr>
 <% }); %>
