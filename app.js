@@ -18,7 +18,7 @@ const reviewsRouter = require('./routes/reviews');
 
 const app = express();
 //connect to database
-mongoose.connect(process.env.DB_URL_MAP, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -55,6 +55,12 @@ passport.deserializeUser(User.deserializeUser());
 
 //set local variables middleware
 app.use(function(req,res,next){
+  req.user = {
+    "_id" : "5ed4fea357c4c416e663b0a0",
+    "username" : "ahmad"
+  }
+  res.locals.currentUser = req.user;
+  
   //Set default page title
   res.locals.title = 'Surf Shop';
   //Set success flash message
