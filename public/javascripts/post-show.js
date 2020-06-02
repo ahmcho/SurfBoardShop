@@ -28,3 +28,8 @@ $(".toggle-edit-form").on("click", function() {
     //toggle visibility of edit review form
     $(this).siblings(".edit-review-form").toggle();
 })
+
+//Add click listener for clearing of rating from edit/create form
+$('.clear-rating').click(function(){
+    $(this).siblings('.input-no-rate').click();
+})

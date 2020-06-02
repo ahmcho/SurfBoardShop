@@ -33,8 +33,7 @@ module.exports = {
         let response = await geocodingClient.forwardGeocode({
             query: req.body.post.location,
             limit: 1
-        })
-        .send();
+        }).send();
         req.body.post.coordinates = response.body.features[0].geometry.coordinates;
         let post = await Post.create(req.body.post);
         req.session.success = 'Post created sucessfully!';
@@ -98,8 +97,7 @@ module.exports = {
             let response = await geocodingClient.forwardGeocode({
                 query: req.body.post.location,
                 limit: 1
-            })
-            .send();
+            }).send();
             post.coordinates = response.body.features[0].geometry.coordinates;
             post.location = req.body.post.location;
         }
