@@ -8,6 +8,7 @@ async function seedPosts() {
                 title: faker.lorem.word(),
                 description: faker.lorem.text(),
                 price: faker.commerce.price(),
+                coordinates: [-122.0842499, 37.4224764],
                 author: {
                     "_id" : "5ed4fea357c4c416e663b0a0",
                     "username" : "ahmad"
