@@ -6,3 +6,12 @@ body {
 a {
   color: #00B7FF;
 }
+#map{
+  width: 100%;
+  height: 300px;
+}
+
+.mapboxgeo-popup {
+  max-width: 400px;
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}

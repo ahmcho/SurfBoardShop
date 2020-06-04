@@ -6,6 +6,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require('passport');
+const favicon = require('serve-favicon');
 const session = require('express-session');
 const User = require('./models/user');
 const mongoose = require('mongoose');
@@ -32,6 +33,9 @@ app.engine('ejs', engine);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+//Favicon
+app.use(favicon(path.join(__dirname, 'public','favicon.ico')));
 
 app.use(logger('dev'));
 app.use(express.json());
