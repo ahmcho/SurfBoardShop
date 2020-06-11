@@ -3,8 +3,10 @@ const Post = require('./models/post');
 const cities = require('./cities');
 
 async function seedPosts() {
-	await Post.remove({});
+	await Post.deleteMany({});
+	console.log('begin');
 	for(const i of new Array(600)) {
+		const random5 = Math.floor(Math.random() * 6);
 		const random1000 = Math.floor(Math.random() * 1000);
 		const title = faker.lorem.word();
 		const description = faker.lorem.text();
@@ -16,7 +18,9 @@ async function seedPosts() {
 				type: 'Point',
 				coordinates: [cities[random1000].longitude, cities[random1000].latitude],
 			},
-            author: '5edb7cba18167f5c38978ad2'
+			price: random1000,
+			avgRating: random5,
+            author: '5ede082681db062968a968a2'
 		}
 		let post = new Post(postData);
 		post.properties.description = `<strong><a href="/posts/${post._id}">${title}</a></strong><p>${post.location}</p><p>${description.substring(0, 20)}...</p>`;
