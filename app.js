@@ -3,29 +3,30 @@ require('dotenv').config();
 const express = require('express');
 const engine = require('ejs-mate');
 const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const passport = require('passport');
 const favicon = require('serve-favicon');
-const session = require('express-session');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
 const User = require('./models/user');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 // const seedPosts = require('./seeds');
 // seedPosts();
 
-//require routes
-const indexRouter = require('./routes/index');
-const postsRouter = require('./routes/posts');
-const reviewsRouter = require('./routes/reviews');
+// require routes
+const index 	= require('./routes/index');
+const posts 	= require('./routes/posts');
+const reviews = require('./routes/reviews');
 
 const app = express();
-//connect to database
+
+// connect to the database
 mongoose.connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log('We are connected!');
+db.once('open', () => {
+  console.log('we\'re connected!');
 });
 
 // use ejs-locals for all ejs templates:
@@ -33,19 +34,18 @@ app.engine('ejs', engine);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+// set public assets directory
+app.use(express.static('public'));
 
-//Favicon
-app.use(favicon(path.join(__dirname, 'public','favicon.ico')));
-
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); /* If our form uses post[title] type names, we should set this to true */
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
-
-//Configure Passport and Sessions
+// Configure Passport and Sessions
 app.use(session({
   secret: 'hoorah',
   resave: false,
@@ -59,30 +59,31 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-//set local variables middleware
-app.use(function(req,res,next){
+// set local variables middleware
+app.use(function(req, res, next) {
   // req.user = {
-  //   "_id" : "5ed4fea357c4c416e663b0a0",
-  //   "username" : "ahmad"
+  //   // '_id' : '5bb27cd1f986d278582aa58c',
+  //   // '_id' : '5bc521c0b142b6d7f7523406',
+  //   '_id' : '5bfed10ad176f845e38aec92',
+  //   'username' : 'ian3'
   // }
   res.locals.currentUser = req.user;
-  
-  //Set default page title
+  // set default page title
   res.locals.title = 'Surf Shop';
-  //Set success flash message
+  // set success flash message
   res.locals.success = req.session.success || '';
   delete req.session.success;
-  //Set error flash message 
+  // set error flash message
   res.locals.error = req.session.error || '';
   delete req.session.error;
-  //continue on to next function in middleware chain
+  // continue on to next function in middleware chain
   next();
 });
 
-//Mount routes
-app.use('/', indexRouter);
-app.use('/posts', postsRouter);
-app.use('/posts/:id/reviews', reviewsRouter);
+// Mount routes
+app.use('/', index);
+app.use('/posts', posts);
+app.use('/posts/:id/reviews', reviews);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -93,18 +94,16 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
+  // // set locals, only providing error in development
   // res.locals.message = err.message;
   // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
+  // // render the error page
   // res.status(err.status || 500);
   // res.render('error');
   console.log(err);
   req.session.error = err.message;
   res.redirect('back');
 });
-
-
 
 module.exports = app;
